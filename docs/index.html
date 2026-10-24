@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Management - Live Demo</title>
+</head>
+<body>
+    <header>
+        <h2>Feedback Management</h2>
+        <nav>
+            <a href="#list" id="navAllFeedback" onclick="showView('list'); return false;">All Feedback</a> |
+            <a href="#create" id="navSubmitFeedback" onclick="showView('create'); return false;">Submit Feedback</a>
+        </nav>
+    </header>
+
+    <hr />
+
+    <main role="main">
+        <!-- Index / List View -->
+        <section id="viewIndex">
+            <h1>All Feedback</h1>
+            <p>Review the feedback submitted in this session (Live GitHub Pages Demo).</p>
+
+            <p>
+                <a href="#create" onclick="showView('create'); return false;"><strong>[ + Submit Feedback ]</strong></a>
+            </p>
+
+            <div id="successNotice" style="display: none;">
+                <strong>Success:</strong> <span id="successText"></span>
+                <br /><br />
+            </div>
+
+            <p><strong id="totalFeedbackLabel">Total Feedback: 2</strong></p>
+
+            <div id="feedbackContainer">
+                <!-- Dynamically populated using _FeedbackCard partial template -->
+            </div>
+        </section>
+
+        <!-- Create / Submit Form View -->
+        <section id="viewCreate" style="display: none;">
+            <h1>Submit Feedback</h1>
+            <p>Share your learning experience. All fields are required.</p>
+
+            <div id="validationSummary" style="display: none;">
+                <strong>Please correct the following errors:</strong>
+                <ul id="validationSummaryList"></ul>
+            </div>
+
+            <form id="feedbackForm" onsubmit="handleFormSubmit(event)" novalidate>
+                <fieldset>
+                    <legend>Feedback Form (Validation &amp; Model Binding)</legend>
+
+                    <p>
+                        <label for="StudentName">Student Name</label><br />
+                        <input id="StudentName" name="StudentName" size="50" maxlength="60" required />
+                        <br />
+                        <span id="errStudentName"></span>
+                    </p>
+
+                    <p>
+                        <label for="Email">Email Address</label><br />
+                        <input id="Email" name="Email" size="50" maxlength="100" type="email" required />
+                        <br />
+                        <span id="errEmail"></span>
+                    </p>
+
+                    <p>
+                        <label for="Subject">Subject</label><br />
+                        <input id="Subject" name="Subject" size="50" maxlength="80" required />
+                        <br />
+                        <span id="errSubject"></span>
+                    </p>
+
+                    <p>
+                        <label for="Rating">Rating (1 to 5)</label><br />
+                        <select id="Rating" name="Rating" required>
+                            <option value="">-- Select rating --</option>
+                            <option value="1">1 / 5</option>
+                            <option value="2">2 / 5</option>
+                            <option value="3">3 / 5</option>
+                            <option value="4">4 / 5</option>
+                            <option value="5">5 / 5</option>
+                        </select>
+                        <br />
+                        <span id="errRating"></span>
+                    </p>
+
+                    <p>
+                        <label for="Comments">Comments</label><br />
+                        <textarea id="Comments" name="Comments" rows="4" cols="50" maxlength="500" required></textarea>
+                        <br />
+                        <span id="errComments"></span>
+                    </p>
+
+                    <p>
+                        <button type="submit">Submit Feedback</button>
+                        <a href="#list" onclick="showView('list'); return false;">View Feedback</a>
+                    </p>
+                </fieldset>
+            </form>
+        </section>
+    </main>
+
+    <hr />
+
+    <footer>
+        <p>
+            Practical 7 | ASP.NET MVC Layout, Partial View &amp; Validation (Demo - No CSS)<br />
+            Ankit raj sharma | Feedback Management Module
+        </p>
+    </footer>
+
+    <!-- Interactive Simulation of MVC Controller & Partial View Rendering -->
+    <script>
+        const initialFeedbacks = [
+            {
+                id: 1,
+                studentName: "Jane Doe",
+                email: "jane.doe@example.com",
+                subject: "ASP.NET MVC Architecture",
+                rating: 5,
+                comments: "Excellent explanation of Layouts, Partial Views and model validation flow.",
+                submittedAt: new Date(Date.now() - 86400000).toLocaleString()
+            },
+            {
+                id: 2,
+                studentName: "John Smith",
+                email: "john.smith@example.com",
+                subject: "C# Model Binding & Validation",
+                rating: 4,
+                comments: "Clear practical implementation of DataAnnotations and ModelState verification.",
+                submittedAt: new Date(Date.now() - 10800000).toLocaleString()
+            }
+        ];
+
+        function getFeedbacks() {
+            const data = sessionStorage.getItem("Feedbacks");
+            if (!data) {
+                sessionStorage.setItem("Feedbacks", JSON.stringify(initialFeedbacks));
+                return initialFeedbacks;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveFeedbacks(list) {
+            sessionStorage.setItem("Feedbacks", JSON.stringify(list));
+        }
+
+        // Simulates Razor Partial View: _FeedbackCard.cshtml
+        function renderFeedbackCardPartial(f) {
+            return `
+                <fieldset>
+                    <legend><strong>${escapeHtml(f.subject)}</strong> (Rating: ${f.rating} / 5)</legend>
+                    <p>${escapeHtml(f.comments)}</p>
+                    <p>
+                        <small>
+                            <strong>Student:</strong> ${escapeHtml(f.studentName)} &lt;${escapeHtml(f.email)}&gt; | 
+                            <strong>Feedback #${f.id}</strong> | 
+                            <strong>Date:</strong> ${f.submittedAt}
+                        </small>
+                    </p>
+                </fieldset>
+                <br />
+            `;
+        }
+
+        function renderList() {
+            const list = getFeedbacks();
+            const container = document.getElementById("feedbackContainer");
+            document.getElementById("totalFeedbackLabel").innerText = "Total Feedback: " + list.length;
+
+            if (list.length === 0) {
+                container.innerHTML = "<p>No feedback yet. Submit your first feedback.</p>";
+            } else {
+                container.innerHTML = list.map(renderFeedbackCardPartial).join("");
+            }
+        }
+
+        function showView(view) {
+            if (view === "create") {
+                document.getElementById("viewIndex").style.display = "none";
+                document.getElementById("viewCreate").style.display = "block";
+                document.getElementById("successNotice").style.display = "none";
+            } else {
+                document.getElementById("viewCreate").style.display = "none";
+                document.getElementById("viewIndex").style.display = "block";
+                renderList();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.innerText = text;
+            return div.innerHTML;
+        }
+
+        // Simulates MVC Model Validation & ModelState.IsValid
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            const errors = {};
+            document.getElementById("errStudentName").innerText = "";
+            document.getElementById("errEmail").innerText = "";
+            document.getElementById("errSubject").innerText = "";
+            document.getElementById("errRating").innerText = "";
+            document.getElementById("errComments").innerText = "";
+            const summaryList = document.getElementById("validationSummaryList");
+            summaryList.innerHTML = "";
+            document.getElementById("validationSummary").style.display = "none";
+
+            const name = document.getElementById("StudentName").value.trim();
+            const email = document.getElementById("Email").value.trim();
+            const subject = document.getElementById("Subject").value.trim();
+            const rating = document.getElementById("Rating").value;
+            const comments = document.getElementById("Comments").value.trim();
+
+            if (!name || name.length < 2) {
+                errors.StudentName = "Student name is required and must be at least 2 characters.";
+            }
+            if (!email || !email.includes("@") || !email.includes(".")) {
+                errors.Email = "Please enter a valid email address.";
+            }
+            if (!subject) {
+                errors.Subject = "Subject is required.";
+            }
+            if (!rating || parseInt(rating) < 1 || parseInt(rating) > 5) {
+                errors.Rating = "Rating is required (1 to 5).";
+            }
+            if (!comments || comments.length < 10) {
+                errors.Comments = "Comments are required and must be at least 10 characters.";
+            }
+
+            if (Object.keys(errors).length > 0) {
+                // Display field errors
+                if (errors.StudentName) document.getElementById("errStudentName").innerText = errors.StudentName;
+                if (errors.Email) document.getElementById("errEmail").innerText = errors.Email;
+                if (errors.Subject) document.getElementById("errSubject").innerText = errors.Subject;
+                if (errors.Rating) document.getElementById("errRating").innerText = errors.Rating;
+                if (errors.Comments) document.getElementById("errComments").innerText = errors.Comments;
+
+                // Display summary
+                document.getElementById("validationSummary").style.display = "block";
+                for (const key in errors) {
+                    const li = document.createElement("li");
+                    li.innerText = errors[key];
+                    summaryList.appendChild(li);
+                }
+                return;
+            }
+
+            // Save new feedback
+            const list = getFeedbacks();
+            const newFeedback = {
+                id: list.length > 0 ? Math.max(...list.map(f => f.id)) + 1 : 1,
+                studentName: name,
+                email: email,
+                subject: subject,
+                rating: parseInt(rating),
+                comments: comments,
+                submittedAt: new Date().toLocaleString()
+            };
+            list.unshift(newFeedback);
+            saveFeedbacks(list);
+
+            // Reset form
+            document.getElementById("feedbackForm").reset();
+
+            // Set TempData success message and redirect to list
+            document.getElementById("successText").innerText = "Feedback submitted successfully!";
+            document.getElementById("successNotice").style.display = "block";
+            showView("list");
+        }
+
+        // Initialize on load
+        window.addEventListener("DOMContentLoaded", () => {
+            renderList();
+        });
+    </script>
+</body>
+</html>

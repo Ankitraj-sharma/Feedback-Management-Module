@@ -4,52 +4,47 @@
     ViewData["Title"] = "Submit Feedback";
 }
 
-<h2>Submit New Feedback</h2>
-<p>Fill out the form below. Validation rules are enforced both client-side and server-side.</p>
+<h1>Submit Feedback</h1>
+<p>Share your learning experience. All fields are required.</p>
 
 <form asp-action="Create" method="post">
-    <!-- Displays all model validation errors -->
+    @Html.AntiForgeryToken()
+
     <div asp-validation-summary="ModelOnly"></div>
 
     <fieldset>
-        <legend>Feedback Information</legend>
+        <legend>Feedback Form</legend>
 
         <p>
-            <label asp-for="FullName"></label><br />
-            <input asp-for="FullName" size="40" />
+            <label asp-for="StudentName"></label><br />
+            <input asp-for="StudentName" size="50" maxlength="60" />
             <br />
-            <span asp-validation-for="FullName"></span>
+            <span asp-validation-for="StudentName"></span>
         </p>
 
         <p>
             <label asp-for="Email"></label><br />
-            <input asp-for="Email" size="40" type="email" />
+            <input asp-for="Email" size="50" maxlength="100" type="email" />
             <br />
             <span asp-validation-for="Email"></span>
         </p>
 
         <p>
-            <label asp-for="Category"></label><br />
-            <select asp-for="Category">
-                <option value="">-- Select a Category --</option>
-                <option value="General">General</option>
-                <option value="Bug Report">Bug Report</option>
-                <option value="Feature Request">Feature Request</option>
-                <option value="Customer Support">Customer Support</option>
-            </select>
+            <label asp-for="Subject"></label><br />
+            <input asp-for="Subject" size="50" maxlength="80" />
             <br />
-            <span asp-validation-for="Category"></span>
+            <span asp-validation-for="Subject"></span>
         </p>
 
         <p>
-            <label asp-for="Rating"></label> (1 = Poor, 5 = Excellent)<br />
+            <label asp-for="Rating"></label><br />
             <select asp-for="Rating">
-                <option value="">-- Select Rating --</option>
-                <option value="1">1 - Poor</option>
-                <option value="2">2 - Fair</option>
-                <option value="3">3 - Good</option>
-                <option value="4">4 - Very Good</option>
-                <option value="5">5 - Excellent</option>
+                <option value="">-- Select rating --</option>
+                <option value="1">1 / 5</option>
+                <option value="2">2 / 5</option>
+                <option value="3">3 / 5</option>
+                <option value="4">4 / 5</option>
+                <option value="5">5 / 5</option>
             </select>
             <br />
             <span asp-validation-for="Rating"></span>
@@ -57,26 +52,18 @@
 
         <p>
             <label asp-for="Comments"></label><br />
-            <textarea asp-for="Comments" rows="5" cols="50"></textarea>
+            <textarea asp-for="Comments" rows="4" cols="50" maxlength="500"></textarea>
             <br />
             <span asp-validation-for="Comments"></span>
         </p>
 
         <p>
-            <input asp-for="SubscribeToUpdates" type="checkbox" id="subscribeCheck" />
-            <label for="subscribeCheck" asp-for="SubscribeToUpdates"></label>
-            <br />
-            <span asp-validation-for="SubscribeToUpdates"></span>
-        </p>
-
-        <p>
             <button type="submit">Submit Feedback</button>
-            <a asp-action="Index">Cancel</a>
+            <a asp-action="Index">View Feedback</a>
         </p>
     </fieldset>
 </form>
 
 @section Scripts {
-    <!-- Partial View for Client-Side Validation Scripts -->
     <partial name="_ValidationScriptsPartial" />
 }

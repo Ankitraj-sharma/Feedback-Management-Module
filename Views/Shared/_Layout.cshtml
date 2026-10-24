@@ -3,14 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Feedback Management System</title>
+    <title>@ViewData["Title"] - Feedback Management</title>
 </head>
 <body>
     <header>
-        <h2>Feedback Management System</h2>
+        <h2>Feedback Management</h2>
         <nav>
-            <a asp-controller="Home" asp-action="Index">Home</a> |
-            <a asp-controller="Feedback" asp-action="Index">Feedback List</a> |
+            <a asp-controller="Feedback" asp-action="Index">All Feedback</a> |
             <a asp-controller="Feedback" asp-action="Create">Submit Feedback</a>
         </nav>
     </header>
@@ -24,7 +23,10 @@
     <hr />
 
     <footer>
-        <p>&copy; @DateTime.UtcNow.Year - Feedback Management System Demo (MVC Layout, Partial View & Validation)</p>
+        <p>
+            Practical 7 | ASP.NET MVC Layout, Partial View &amp; Validation (Demo - No CSS)<br />
+            Ankit raj sharma | Feedback Management Module
+        </p>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

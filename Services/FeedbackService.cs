@@ -7,7 +7,6 @@ public interface IFeedbackService
     List<Feedback> GetAllFeedbacks();
     Feedback? GetFeedbackById(int id);
     void AddFeedback(Feedback feedback);
-    FeedbackSummaryViewModel GetSummary();
 }
 
 public class FeedbackService : IFeedbackService
@@ -17,35 +16,22 @@ public class FeedbackService : IFeedbackService
         new Feedback
         {
             Id = 1,
-            FullName = "Jane Doe",
+            StudentName = "Jane Doe",
             Email = "jane.doe@example.com",
-            Category = "Feature Request",
+            Subject = "ASP.NET MVC Architecture",
             Rating = 5,
-            Comments = "Would love to see an automated dark mode toggle in the next release.",
-            SubscribeToUpdates = true,
-            SubmittedAt = DateTime.UtcNow.AddDays(-2)
+            Comments = "Excellent explanation of Layouts, Partial Views and model validation flow.",
+            SubmittedAt = DateTime.Now.AddDays(-1)
         },
         new Feedback
         {
             Id = 2,
-            FullName = "John Smith",
+            StudentName = "John Smith",
             Email = "john.smith@example.com",
-            Category = "Bug Report",
-            Rating = 3,
-            Comments = "Encountered a minor validation glitch when submitting with certain special characters.",
-            SubscribeToUpdates = false,
-            SubmittedAt = DateTime.UtcNow.AddDays(-1)
-        },
-        new Feedback
-        {
-            Id = 3,
-            FullName = "Alice Johnson",
-            Email = "alice.j@example.com",
-            Category = "General",
+            Subject = "C# Model Binding & Validation",
             Rating = 4,
-            Comments = "The application navigation is very intuitive and responsive. Good work!",
-            SubscribeToUpdates = true,
-            SubmittedAt = DateTime.UtcNow.AddHours(-5)
+            Comments = "Clear practical implementation of DataAnnotations and ModelState verification.",
+            SubmittedAt = DateTime.Now.AddHours(-3)
         }
     };
 
@@ -55,7 +41,7 @@ public class FeedbackService : IFeedbackService
     {
         lock (_lock)
         {
-            return _feedbacks.OrderByDescending(f => f.SubmittedAt).ToList();
+            return _feedbacks.OrderByDescending(f => f.Id).ToList();
         }
     }
 
@@ -72,29 +58,8 @@ public class FeedbackService : IFeedbackService
         lock (_lock)
         {
             feedback.Id = _feedbacks.Count > 0 ? _feedbacks.Max(f => f.Id) + 1 : 1;
-            feedback.SubmittedAt = DateTime.UtcNow;
+            feedback.SubmittedAt = DateTime.Now;
             _feedbacks.Add(feedback);
-        }
-    }
-
-    public FeedbackSummaryViewModel GetSummary()
-    {
-        lock (_lock)
-        {
-            int total = _feedbacks.Count;
-            double avg = total > 0 ? Math.Round(_feedbacks.Average(f => f.Rating ?? 0), 1) : 0;
-            int bugs = _feedbacks.Count(f => f.Category == "Bug Report");
-            int features = _feedbacks.Count(f => f.Category == "Feature Request");
-            int general = _feedbacks.Count(f => f.Category == "General");
-
-            return new FeedbackSummaryViewModel
-            {
-                TotalFeedbacks = total,
-                AverageRating = avg,
-                BugReportsCount = bugs,
-                FeatureRequestsCount = features,
-                GeneralFeedbackCount = general
-            };
         }
     }
 }

@@ -1,0 +1,14 @@
+@model FeedbackManagementDemo.Models.Feedback
+
+<fieldset>
+    <legend><strong>@Model.Subject</strong> (Rating: @Model.Rating / 5)</legend>
+    <p>@Model.Comments</p>
+    <p>
+        <small>
+            <strong>Student:</strong> @Model.StudentName &lt;@Model.Email&gt; | 
+            <strong>Feedback #@Model.Id</strong> | 
+            <strong>Date:</strong> @Model.SubmittedAt.ToString("dd MMM yyyy, hh:mm tt")
+        </small>
+    </p>
+</fieldset>
+<br />

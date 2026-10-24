@@ -1,54 +1,35 @@
-@model FeedbackManagementDemo.Models.FeedbackListViewModel
+@model List<FeedbackManagementDemo.Models.Feedback>
 
 @{
-    ViewData["Title"] = "Feedback List";
+    ViewData["Title"] = "All Feedback";
 }
 
-<h2>Feedback Management - Overview</h2>
+<h1>All Feedback</h1>
+<p>Review the feedback submitted in this session.</p>
 
-@if (TempData["SuccessMessage"] != null)
+<p>
+    <a asp-action="Create"><strong>[ + Submit Feedback ]</strong></a>
+</p>
+
+@if (TempData["Success"] != null)
 {
     <div>
-        <strong>Success:</strong> @TempData["SuccessMessage"]
+        <strong>Success:</strong> @TempData["Success"]
     </div>
     <br />
 }
 
-<!-- Demonstration of Partial View for Summary -->
-<partial name="_FeedbackSummaryPartial" model="Model.Summary" />
+<p><strong>Total Feedback: @Model.Count</strong></p>
 
-<br />
-
-<p>
-    <a asp-action="Create"><strong>[ + Submit New Feedback ]</strong></a>
-</p>
-
-<h3>All Feedback Entries</h3>
-
-@if (Model.Feedbacks == null || !Model.Feedbacks.Any())
+@if (Model == null || !Model.Any())
 {
-    <p>No feedback entries found.</p>
+    <p>No feedback yet. Submit your first feedback.</p>
 }
 else
 {
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Category</th>
-                <th>Rating</th>
-                <th>Submitted Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Feedbacks)
-            {
-                <!-- Demonstration of Partial View for List Row -->
-                <partial name="_FeedbackItemRowPartial" model="item" />
-            }
-        </tbody>
-    </table>
+    foreach (var feedback in Model)
+    {
+        <!-- Demonstration of Partial View -->
+        <partial name="_FeedbackCard" model="feedback" />
+    }
 }
