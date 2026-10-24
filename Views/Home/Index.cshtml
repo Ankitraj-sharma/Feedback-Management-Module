@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>Feedback Management Module - Demo</h2>
+
+<p>
+    This project demonstrates an ASP.NET Core MVC application built purely with 
+    <strong>MVC Layout</strong>, <strong>Partial Views</strong>, and <strong>Validation</strong>, without any CSS styling.
+</p>
+
+<h3>Core Concepts Implemented:</h3>
+<ol>
+    <li>
+        <strong>MVC Layout (_Layout.cshtml):</strong>
+        A consistent master layout with unstyled HTML structure, navigation header, content body (<code>@@RenderBody()</code>), footer, and optional scripts section.
+    </li>
+    <li>
+        <strong>Partial Views:</strong>
+        <ul>
+            <li><code>_FeedbackSummaryPartial.cshtml</code>: Renders aggregate statistics across feedback submissions.</li>
+            <li><code>_FeedbackItemRowPartial.cshtml</code>: Renders individual feedback rows in the feedback table.</li>
+            <li><code>_FeedbackDetailsPartial.cshtml</code>: Renders the full details of a specific feedback record.</li>
+            <li><code>_ValidationScriptsPartial.cshtml</code>: Injects validation scripts unobtrusively for client-side validation.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Validation:</strong>
+        <ul>
+            <li><strong>Model Data Annotations:</strong> <code>[Required]</code>, <code>[StringLength]</code>, <code>[EmailAddress]</code>, <code>[Range]</code>, custom error messages.</li>
+            <li><strong>Server-Side Validation:</strong> Enforced in <code>FeedbackController.Create</code> using <code>ModelState.IsValid</code>.</li>
+            <li><strong>Client-Side Validation:</strong> Enabled with tag helpers (<code>asp-for</code>, <code>asp-validation-for</code>, <code>asp-validation-summary</code>) and jQuery unobtrusive validation.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>No CSS:</strong>
+        Built exclusively using standard semantic HTML elements (forms, tables, fieldsets, lists) for clear demonstration without external or custom CSS styling.
+    </li>
+</ol>
+
+<hr />
+
+<h3>Quick Navigation:</h3>
+<ul>
+    <li><a asp-controller="Feedback" asp-action="Index"><strong>View Feedback List &amp; Statistics</strong></a></li>
+    <li><a asp-controller="Feedback" asp-action="Create"><strong>Submit New Feedback (Test Validation)</strong></a></li>
+</ul>

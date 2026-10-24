@@ -1,0 +1,54 @@
+@model FeedbackManagementDemo.Models.FeedbackListViewModel
+
+@{
+    ViewData["Title"] = "Feedback List";
+}
+
+<h2>Feedback Management - Overview</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div>
+        <strong>Success:</strong> @TempData["SuccessMessage"]
+    </div>
+    <br />
+}
+
+<!-- Demonstration of Partial View for Summary -->
+<partial name="_FeedbackSummaryPartial" model="Model.Summary" />
+
+<br />
+
+<p>
+    <a asp-action="Create"><strong>[ + Submit New Feedback ]</strong></a>
+</p>
+
+<h3>All Feedback Entries</h3>
+
+@if (Model.Feedbacks == null || !Model.Feedbacks.Any())
+{
+    <p>No feedback entries found.</p>
+}
+else
+{
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Category</th>
+                <th>Rating</th>
+                <th>Submitted Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Feedbacks)
+            {
+                <!-- Demonstration of Partial View for List Row -->
+                <partial name="_FeedbackItemRowPartial" model="item" />
+            }
+        </tbody>
+    </table>
+}

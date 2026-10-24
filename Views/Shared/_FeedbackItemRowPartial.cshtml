@@ -1,0 +1,13 @@
+@model FeedbackManagementDemo.Models.Feedback
+
+<tr>
+    <td>@Model.Id</td>
+    <td>@Model.FullName</td>
+    <td>@Model.Email</td>
+    <td>@Model.Category</td>
+    <td>@Model.Rating / 5</td>
+    <td>@Model.SubmittedAt.ToLocalTime().ToString("g")</td>
+    <td>
+        <a asp-controller="Feedback" asp-action="Details" asp-route-id="@Model.Id">View Details</a>
+    </td>
+</tr>
